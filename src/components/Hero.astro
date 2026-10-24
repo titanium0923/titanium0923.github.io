@@ -1,0 +1,155 @@
+---
+---
+
+<section class="relative min-h-screen flex items-center pt-20 overflow-hidden" id="hero">
+  <div class="absolute inset-0 z-0 pointer-events-none opacity-20 dark:opacity-10 transition-transform duration-300 ease-out" id="hero-grid"
+       style="background-image: linear-gradient(to right, var(--color-border) 1px, transparent 1px), linear-gradient(to bottom, var(--color-border) 1px, transparent 1px); background-size: 4rem 4rem;">
+  </div>
+
+  <div class="container mx-auto px-4 sm:px-6 md:px-8 z-10 grid grid-cols-12 gap-4">
+    <div class="col-span-12 lg:col-span-10 lg:col-start-2 flex flex-col gap-10">
+
+      <div class="flex flex-wrap items-center gap-4 text-sm sm:text-base font-medium tracking-wide">
+        <div class="flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-bg/80 backdrop-blur-sm shadow-sm">
+          <span class="relative flex h-2.5 w-2.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-accent"></span>
+          </span>
+          <span>Открыт к предложениям</span>
+        </div>
+        <div class="text-text/60 flex items-center gap-3">
+          <span>Костанай, Казахстан</span>
+          <span class="w-1 h-1 rounded-full bg-border"></span>
+          <span id="local-time" class="tabular-nums">--:--</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row sm:items-end gap-6 sm:gap-8 mt-4">
+        <div class="w-24 h-24 sm:w-32 sm:h-32 rounded-full border border-border flex items-center justify-center bg-bg shadow-sm shrink-0 relative overflow-hidden group">
+          <div class="absolute inset-0 bg-accent/5 group-hover:bg-accent/10 transition-colors duration-500"></div>
+          <span class="text-3xl sm:text-5xl font-bold tracking-tighter text-accent">АТ</span>
+        </div>
+
+        <h1 class="text-6xl sm:text-8xl lg:text-9xl font-bold tracking-tighter leading-[1.05]">
+          <span class="block overflow-hidden"><span class="block translate-y-full animate-reveal-up" style="animation-delay: 0.1s;">Амирхан</span></span>
+          <span class="block overflow-hidden"><span class="block translate-y-full animate-reveal-up" style="animation-delay: 0.2s;">Туленов</span></span>
+        </h1>
+      </div>
+
+      <div class="flex flex-col gap-2 mt-2 max-w-2xl">
+        <h2 class="text-2xl sm:text-4xl font-medium tracking-tight">Backend-разработчик</h2>
+        <div class="text-lg sm:text-2xl text-text/60 h-8 sm:h-10 flex items-center mt-1">
+          <span id="typewriter" class="border-r-2 border-accent pr-1.5 animate-cursor-blink"></span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .animate-reveal-up {
+    animation: revealUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes revealUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  .animate-cursor-blink {
+    animation: cursorBlink 1s step-end infinite;
+  }
+  @keyframes cursorBlink {
+    0%, 100% { border-color: transparent; }
+    50% { border-color: theme('colors.accent'); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-reveal-up {
+      animation: none;
+      transform: translateY(0);
+    }
+    #hero-grid {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const grid = document.getElementById('hero-grid');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    if (grid && !prefersReducedMotion) {
+      document.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 30;
+        const y = (e.clientY / window.innerHeight - 0.5) * 30;
+        grid.style.transform = `translate(${x}px, ${y}px)`;
+      });
+    }
+
+    const phrases = ['создаю ботов в телеграмме', 'пишу фундамент на пайтоне'];
+    const typewriterEl = document.getElementById('typewriter');
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    let typeTimeout: any;
+
+    function type() {
+      if (!typewriterEl) return;
+      
+      if (prefersReducedMotion) {
+        typewriterEl.textContent = phrases[0];
+        typewriterEl.classList.remove('border-r-2', 'animate-cursor-blink');
+        return;
+      }
+
+      const currentPhrase = phrases[phraseIndex];
+
+      if (isDeleting) {
+        typewriterEl.textContent = currentPhrase.substring(0, charIndex - 1);
+        charIndex--;
+      } else {
+        typewriterEl.textContent = currentPhrase.substring(0, charIndex + 1);
+        charIndex++;
+      }
+
+      let delay = isDeleting ? 40 : 80;
+
+      if (!isDeleting && charIndex === currentPhrase.length) {
+        delay = 2500;
+        isDeleting = true;
+      } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        phraseIndex = (phraseIndex + 1) % phrases.length;
+        delay = 500;
+      }
+
+      typeTimeout = setTimeout(type, delay);
+    }
+    
+    if (typewriterEl) {
+      clearTimeout(typeTimeout);
+      setTimeout(type, 1200);
+    }
+
+    function updateTime() {
+      const timeEl = document.getElementById('local-time');
+      if (!timeEl) return;
+      
+      const formatter = new Intl.DateTimeFormat('ru-RU', {
+        timeZone: 'Asia/Almaty',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+      
+      timeEl.textContent = `${formatter.format(new Date())} (Местное)`;
+    }
+    
+    updateTime();
+    
+    // Предотвращаем создание множества интервалов при переходах
+    if ((window as any).clockInterval) clearInterval((window as any).clockInterval);
+    (window as any).clockInterval = setInterval(updateTime, 10000);
+  });
+</script>

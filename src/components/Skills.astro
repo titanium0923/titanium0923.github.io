@@ -1,0 +1,89 @@
+---
+// src/components/Skills.astro
+const skills = [
+  { category: 'Backend', items: ['Python', 'C++'] },
+  { category: 'AI Tools', items: ['Claude', 'Gemini'] },
+  { category: 'Стек сайта', items: ['Astro', 'TypeScript', 'Tailwind CSS'] }
+];
+
+// Для бегущей строки (повторяем элементы, чтобы заполнить экран)
+const marqueeRow1 = ['Python', 'C++', 'Backend', 'Algorithms', 'Data Structures', 'REST API', 'Python', 'C++', 'Backend', 'Algorithms'];
+const marqueeRow2 = ['Claude', 'Gemini', 'Prompt Engineering', 'AI Integration', 'Automation', 'Claude', 'Gemini', 'Prompt Engineering', 'AI Integration'];
+---
+
+<section class="py-24 sm:py-32 border-t border-border overflow-hidden" id="skills">
+  <div class="container mx-auto px-4 sm:px-6 md:px-8 mb-16">
+    <div class="grid grid-cols-12 gap-8">
+      <div class="col-span-12 lg:col-span-5 text-text/50 text-sm uppercase tracking-widest font-medium">
+        Навыки
+      </div>
+      <div class="col-span-12 lg:col-span-7 flex flex-col gap-10">
+        {skills.map(group => (
+          <div>
+            <h3 class="text-xl font-medium mb-4">{group.category}</h3>
+            <div class="flex flex-wrap gap-3">
+              {group.items.map(item => (
+                <span class="px-5 py-2 rounded-full border border-border bg-bg/50 backdrop-blur-sm text-sm font-medium hover:border-accent hover:text-accent transition-colors">
+                  {item}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <!-- Бегущие строки -->
+  <div class="relative flex flex-col gap-4 mt-20 sm:mt-32 w-[110%] -left-[5%] rotate-[-2deg]">
+    <div class="marquee-container group">
+      <div class="marquee-content animate-marquee group-hover:pause">
+        {[...marqueeRow1, ...marqueeRow1].map(item => (
+          <span class="text-5xl sm:text-7xl font-bold tracking-tighter text-border px-8 uppercase">{item}</span>
+        ))}
+      </div>
+    </div>
+    <div class="marquee-container group" dir="rtl">
+      <div class="marquee-content animate-marquee group-hover:pause">
+        {[...marqueeRow2, ...marqueeRow2].map(item => (
+          <span class="text-5xl sm:text-7xl font-bold tracking-tighter text-border px-8 uppercase" dir="ltr">{item}</span>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .marquee-container {
+    display: flex;
+    overflow: hidden;
+    user-select: none;
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  }
+  .marquee-content {
+    display: flex;
+    flex-shrink: 0;
+    justify-content: space-around;
+    min-width: 100%;
+  }
+  .animate-marquee {
+    animation: marquee 20s linear infinite;
+  }
+  .pause {
+    animation-play-state: paused;
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .animate-marquee {
+      animation: none;
+    }
+    .marquee-container {
+      mask-image: none;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  }
+</style>

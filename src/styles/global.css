@@ -1,0 +1,33 @@
+/* src/styles/global.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-bg: #ffffff;
+    --color-text: #111111;
+    --color-border: #e5e5e5;
+  }
+  
+  .dark {
+    --color-bg: #0a0a0a;
+    --color-text: #f5f5f5;
+    --color-border: #262626;
+  }
+
+  body {
+    @apply bg-bg text-text font-sans antialiased transition-colors duration-300;
+  }
+
+  /* Прячем скроллбар для эстетики Awwwards, но оставляем функционал */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border rounded-full;
+  }
+}

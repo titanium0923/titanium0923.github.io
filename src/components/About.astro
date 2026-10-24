@@ -1,0 +1,52 @@
+---
+// src/components/About.astro
+---
+<section class="py-24 sm:py-32 border-t border-border" id="about">
+  <div class="container mx-auto px-4 sm:px-6 md:px-8 grid grid-cols-12 gap-8">
+    
+    <div class="col-span-12 lg:col-span-5 text-text/50 text-sm uppercase tracking-widest font-medium">
+      Обо мне
+    </div>
+    
+    <div class="col-span-12 lg:col-span-7 flex flex-col gap-12">
+      <p class="text-2xl sm:text-3xl md:text-4xl font-medium leading-snug tracking-tight">
+        Создаю различные программы на пайтоне, активно изучаю backend направление, развиваю понимание ИИ как инструмента. Также, свободно владею английским языком.
+      </p>
+      
+      <div class="flex items-center gap-6 mt-4">
+        <!-- Анимированный счетчик -->
+        <div class="text-6xl sm:text-8xl font-bold tracking-tighter text-accent flex items-baseline">
+          <span id="bot-counter">0</span>+
+        </div>
+        <div class="text-lg sm:text-xl text-text/60 leading-tight max-w-[150px]">
+          рабочих<br/>ботов
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const counter = document.getElementById('bot-counter');
+    let hasAnimated = false;
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && !hasAnimated && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        hasAnimated = true;
+        let current = 0;
+        const target = 5; 
+        const timer = setInterval(() => {
+          current += 1;
+          if (counter) counter.textContent = current.toString();
+          if (current >= target) clearInterval(timer);
+        }, 150);
+      } else if (entries[0].isIntersecting && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (counter) counter.textContent = '5';
+      }
+    }, { threshold: 0.5 });
+
+    if (counter) observer.observe(counter);
+  });
+</script>
